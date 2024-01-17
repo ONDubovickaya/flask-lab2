@@ -39,7 +39,7 @@ jobs:
           cd postgres
           psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < scripts/db-v3.sql
           cd ..
-          cd app/scripts_DataBase
+          cd app_flask/scripts_DataBase
           psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < create_tables.sql
           psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < fill_cars_table.sql
           cd ..
