@@ -13,8 +13,6 @@ services:
       - ./postgres/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
-    #networks:
-      #- internal
 
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
@@ -22,10 +20,9 @@ services:
       timeout: 15s
       retries: 2
 
-  cars-service-lab2:
+  carsservice:
     build: app_flask/services/carsService
-    #image: ondubovickaya/cars-service-lab2
-    container_name: cars-service-lab2
+    container_name: carsservice
     depends_on:
       postgres:
         condition: service_healthy
@@ -37,13 +34,10 @@ services:
       DATA_BASE_HOST: "postgres"
     ports:
       - "8070:8070"
-    #networks:
-      #- internal
 
-  payments-service-lab2:
+  paymentservice:
     build: app_flask/services/paymentService
-    #image: ondubovickaya/payments-service-lab2
-    container_name: payments-service-lab2
+    container_name: paymentservice
     depends_on:
       postgres:
         condition: service_healthy
@@ -55,13 +49,10 @@ services:
       DATA_BASE_HOST: "postgres"
     ports:
       - "8050:8050"
-    #networks:
-      #- internal
 
-  rental-service-lab2:
+  rentalservice:
     build: app_flask/services/rentalService
-    #image: ondubovickaya/rental-service-lab2
-    container_name: rental-service-lab2
+    container_name: rentalservice
     depends_on:
       postgres:
         condition: service_healthy
@@ -73,30 +64,28 @@ services:
       DATA_BASE_HOST: "postgres"
     ports:
       - "8060:8060"
-    #networks:
-      #- internal
 
-  api-gateway-lab2:
+  gatewayservice:
     build: app_flask/services/gatewayService
-    #image: ondubovickaya/api-gateway-lab2
-    container_name: api-gateway-lab2
+    container_name: gatewayservice
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      CARS_SERVICE_HOST: "cars-service-lab2"
+      DATA_BASE_PORT: "5432"
+      DATA_BASE_NAME: "postgres"
+      DATA_BASE_USER: "postgres"
+      DATA_BASE_PASS: "postgres"
+      DATA_BASE_HOST: "postgres"
+      CARS_SERVICE_HOST: "carsservice"
       CARS_SERVICE_PORT: "8070"
-      PAYMENT_SERVICE_HOST: "payments-service-lab2"
+      PAYMENT_SERVICE_HOST: "paymentservice"
       PAYMENT_SERVICE_PORT: "8050"
-      RENTAL_SERVICE_HOST: "rental-service-lab2"
+      RENTAL_SERVICE_HOST: "rentalservice"
       RENTAL_SERVICE_PORT: "8060"
+
     ports:
       - "8080:8080"
-    #networks:
-      #- internal
-    
+
 volumes:
   db-data:
-
-#networks:
-  #internal:
