@@ -4,9 +4,9 @@ import datetime
 import json
 import os
 
-cars_url = f"https://{os.environ['CARS_SERVICE_HOST']:{os.environ['CARS_SERVICE_PORT']}}"
-rental_url = f"https://{os.environ['RENTAL_SERVICE_HOST']:{os.environ['RENTAL_SERVICE_PORT']}}"
-payment_url = f"https://{os.environ['PAYMENT_SERVICE_HOST']:{os.environ['PAYMENT_SERVICE_PORT']}}"
+cars_url = f"https://{os.environ['CARS_SERVICE_HOST']}:{os.environ['CARS_SERVICE_PORT']}"
+rental_url = f"https://{os.environ['RENTAL_SERVICE_HOST']}:{os.environ['RENTAL_SERVICE_PORT']}"
+payment_url = f"https://{os.environ['PAYMENT_SERVICE_HOST']}:{os.environ['PAYMENT_SERVICE_PORT']}"
 
 def get_data_from_service(service_url, headers={}, timeout=5):
     try:
