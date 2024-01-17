@@ -19,18 +19,61 @@ jobs:
 
       # TODO build and run unit tests
 
+      #- name: Build images
+       # timeout-minutes: 10
+        #run: docker compose build
+        
       - name: Build images
         timeout-minutes: 10
-        run: docker compose build
-
-      - name: Run containers
-        timeout-minutes: 5
         run: |
-          docker compose up -d
+          docker-compose build postgres
+          docker-compose build api-gateway-lab2
+          docker-compose build rental-service-lab2
+          docker-compose build payments-service-lab2
+          docker-compose build cars-service-lab2
+      - name: Setup db
+        run: |
+          docker-compose up -d postgres
+          docker-compose logs postgres
+          sleep 5
+        
+        #cd postgres
+        #psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < scripts/db-v3.sql
+        #cd ..
+        #cd app/scripts_DataBase
+        #psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < create_tables.sql
+        #psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < fill_cars_table.sql
+        #cd ..
+          
+      #- name: Run containers
+       # timeout-minutes: 5
+        #run: |
+         # docker compose up -d
+          #./scripts/wait-script.sh
+        #env:
+         # WAIT_PORTS: 8080,8070,8060,8050
+         
+      - name: Run containers
+        timeout-minutes: 10
+        run: |
+          docker-compose up -d rental-service-lab2
+          docker-compose up -d payments-service-lab2
+          docker-compose up -d cars-service-lab2
+          docker-compose up -d api-gateway-lab2
+
+          docker-compose logs rental-service-lab2
+          docker-compose logs payments-service-lab2
+          docker-compose logs cars-service-lab2
+          docker-compose logs api-gateway-lab2
           ./scripts/wait-script.sh
         env:
           WAIT_PORTS: 8080,8070,8060,8050
-
+      
+      - name: Wait 15s
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '15s'
+          
       - name: Run API Tests
         uses: matt-ball/newman-action@master
         with:
@@ -41,18 +84,18 @@ jobs:
           reporters: '[ "cli" ]'
 
       #- uses: education/autograding@v1
-        #id: autograder
-        #continue-on-error: true
+       # id: autograder
+       # continue-on-error: true
 
       #- name: Github auto grader mark
-        #uses: Romanow/google-sheet-autograder-marker@v1.0
-        #with:
-          #google_token: ${{secrets.GOOGLE_API_KEY}}
-          #sheet_id: "1xkgjUX6Qmk7rdJG-QPOToav-HWWtthJjnShIKnw3oIY"
-          #homework_number: 2
-          #user_column: 'D'
-          #column_offset: 'F'
-          #mark: "'+"
+       # uses: Romanow/google-sheet-autograder-marker@v1.0
+       # with:
+        #  google_token: ${{secrets.GOOGLE_API_KEY}}
+        #  sheet_id: "1xkgjUX6Qmk7rdJG-QPOToav-HWWtthJjnShIKnw3oIY"
+        #  homework_number: 2
+        #  user_column: 'D'
+        #  column_offset: 'F'
+        #  mark: "'+"
 
       - name: Stop containers
         if: always()
