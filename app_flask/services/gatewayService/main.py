@@ -4,9 +4,9 @@ import datetime
 import json
 import os
 
-cars_url = f"https://{os.environ['CARS_SERVICE_HOST']}:{os.environ['CARS_SERVICE_PORT']}"
-rental_url = f"https://{os.environ['RENTAL_SERVICE_HOST']}:{os.environ['RENTAL_SERVICE_PORT']}"
-payment_url = f"https://{os.environ['PAYMENT_SERVICE_HOST']}:{os.environ['PAYMENT_SERVICE_PORT']}"
+#cars_url = f"https://{os.environ['CARS_SERVICE_HOST']}:{os.environ['CARS_SERVICE_PORT']}"
+#rental_url = f"https://{os.environ['RENTAL_SERVICE_HOST']}:{os.environ['RENTAL_SERVICE_PORT']}"
+#payment_url = f"https://{os.environ['PAYMENT_SERVICE_HOST']}:{os.environ['PAYMENT_SERVICE_PORT']}"
 
 def get_data_from_service(service_url, headers={}, timeout=5):
     try:
@@ -41,7 +41,8 @@ def service():
 @app.route('/api/v1/cars', methods=['GET'])
 def get_cars():
     #получаем данные из сервиса Cars
-    url = f"{cars_url}/api/v1/cars?{request.full_path.split('?')[-1]}"
+    #url = f"{cars_url}/api/v1/cars?{request.full_path.split('?')[-1]}"
+    url = 'http://' + os.environ['CARS_SERVICE_HOST'] + ':' + os.environ['CARS_SERVICE_PORT'] + '/' + 'api/v1/cars?' + request.full_path.split('?')[-1]
     resp = get_data_from_service(url,timeout=5)
     
     if resp:
@@ -79,7 +80,8 @@ def get_rental(rentalUid):
     user = request.headers['X-User-Name']
     
     # получаем данные из сервиса Rental
-    url = f"{rental_url}/api/v1/rental/{rentalUid}"
+    #url = f"{rental_url}/api/v1/rental/{rentalUid}"
+    url = 'http://' + os.environ['RENTAL_SERVICE_HOST'] + ':' + os.environ['RENTAL_SERVICE_PORT'] + '/api/v1/rental/'+ rentalUid
     head = {'X-User-Name': user}
 
     resp = get_data_from_service(url, timeout=5, headers=head)
@@ -94,7 +96,8 @@ def get_rental(rentalUid):
     rental = resp.json()
 
     # получаем данные из сервиса Cars
-    url = f"{cars_url}/api/v1/cars/{rental['carUid']}"
+    #url = f"{cars_url}/api/v1/cars/{rental['carUid']}"
+    url = 'http://' + os.environ['CARS_SERVICE_HOST'] + ':' + os.environ['CARS_SERVICE_PORT'] + '/api/v1/cars/' + rental['carUid']
     resp = get_data_from_service(url, timeout=5)
 
     if resp is None:
@@ -108,7 +111,8 @@ def get_rental(rentalUid):
     rental['car'] = car_simplify(resp.json())
 
     # получаем данные из сервиса Payment
-    url = f"{payment_url}/api/v1/payment/{rental['paymentUid']}"
+    #url = f"{payment_url}/api/v1/payment/{rental['paymentUid']}"
+    url = 'http://' + os.environ['PAYMENT_SERVICE_HOST'] + ':' + os.environ['PAYMENT_SERVICE_PORT'] + '/api/v1/payment/' + rental['paymentUid']
     resp = get_data_from_service(url, timeout=5)
 
     if resp is None:
