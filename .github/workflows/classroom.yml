@@ -27,23 +27,22 @@ jobs:
         timeout-minutes: 10
         run: |
           docker-compose build postgres
-          docker-compose build api-gateway-lab2
-          docker-compose build rental-service-lab2
-          docker-compose build payments-service-lab2
-          docker-compose build cars-service-lab2
+          docker-compose build gatewayservice
+          docker-compose build rentalservice
+          docker-compose build paymentservice
+          docker-compose build carsservice
       - name: Setup db
         run: |
           docker-compose up -d postgres
           docker-compose logs postgres
           sleep 5
-        
-        #cd postgres
-        #psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < scripts/db-v3.sql
-        #cd ..
-        #cd app/scripts_DataBase
-        #psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < create_tables.sql
-        #psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < fill_cars_table.sql
-        #cd ..
+          cd postgres
+          psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < scripts/db-v3.sql
+          cd ..
+          cd app/scripts_DataBase
+          psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < create_tables.sql
+          psql "user=postgres hostaddr=127.0.0.1 port=5432 password=postgres" < fill_cars_table.sql
+          cd ..
           
       #- name: Run containers
        # timeout-minutes: 5
@@ -56,15 +55,14 @@ jobs:
       - name: Run containers
         timeout-minutes: 10
         run: |
-          docker-compose up -d rental-service-lab2
-          docker-compose up -d payments-service-lab2
-          docker-compose up -d cars-service-lab2
-          docker-compose up -d api-gateway-lab2
-
-          docker-compose logs rental-service-lab2
-          docker-compose logs payments-service-lab2
-          docker-compose logs cars-service-lab2
-          docker-compose logs api-gateway-lab2
+          docker-compose up -d rentalservice
+          docker-compose up -d paymentservice
+          docker-compose up -d carsservice
+          docker-compose up -d gatewayservice
+          docker-compose logs rentalservice
+          docker-compose logs paymentservice
+          docker-compose logs carsservice
+          docker-compose logs gatewayservice
           ./scripts/wait-script.sh
         env:
           WAIT_PORTS: 8080,8070,8060,8050
