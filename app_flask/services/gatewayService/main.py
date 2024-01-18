@@ -187,7 +187,7 @@ def get_rentals():
         rental['payment'] = resp.json()
         del rental['paymentUid']
 
-    response = make_response(jsonify(rental))
+    response = make_response(jsonify(rentals))
     response.status_code = 200
     response.headers['Content-Type'] = 'application/json'
         
