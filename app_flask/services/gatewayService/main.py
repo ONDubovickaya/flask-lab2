@@ -293,7 +293,7 @@ def post_rentals():
         
         return response
     
-    if resp.status_code == 200:
+    if resp.status_code != 200:
         response = make_response(resp.text)
         response.status_code = resp.status_code
         response.headers['Content-Type'] = 'application/json'
