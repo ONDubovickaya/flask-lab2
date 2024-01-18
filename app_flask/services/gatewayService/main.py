@@ -349,7 +349,7 @@ def post_rental_finish(rentalUid):
 
 ## маршрут delete rental
 @app.route('/api/v1/rental/<string:rentalUid>', methods=['DELETE'])
-def delte_rental(rentalUid):
+def delete_rental(rentalUid):
     # удаление записи с помощью Rental сервиса
     url = f"{rental_url}/api/v1/rental/{rentalUid}"
     resp = delete_data_from_service(url, timeout=5)
