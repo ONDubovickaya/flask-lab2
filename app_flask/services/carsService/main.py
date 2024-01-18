@@ -128,7 +128,7 @@ def validate_args(args):
 
 @app.route('/api/v1/cars', methods=['GET'])
 def get_cars():
-    page, size, show_all, errors = validate_args(request.args.get())
+    page, size, show_all, errors = validate_args(request.args)
 
     if len(errors) > 0:
         response = make_response(jsonify({'errors': errors}))
