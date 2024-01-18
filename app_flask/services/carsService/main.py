@@ -69,7 +69,7 @@ def service():
     return "CARS"
 
 #маршрут get
-@app.route('/api/v1/payment/<string:carUid>', methods=['GET'])
+@app.route('/api/v1/cars/<string:carUid>', methods=['GET'])
 def get_car(carUid):
     try:
         car = CarsModel.select().where(CarsModel.car_uid == carUid).get().to_dict()
