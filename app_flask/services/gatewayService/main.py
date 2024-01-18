@@ -43,7 +43,7 @@ def get_cars():
     #получаем данные из сервиса Cars
     url = f"{cars_url}/api/v1/cars?{request.full_path.split('?')[-1]}"
     #url = 'http://' + os.environ['CARS_SERVICE_HOST'] + ':' + os.environ['CARS_SERVICE_PORT'] + '/' + 'api/v1/cars?' + request.full_path.split('?')[-1]
-    resp = get_data_from_service(url, headers={}, timeout=5)
+    resp = get_data_from_service(url, timeout=5)
     
     if resp:
         response = make_response(resp.text)
@@ -98,7 +98,7 @@ def get_rental(rentalUid):
     # получаем данные из сервиса Cars
     url = f"{cars_url}/api/v1/cars/{rental['carUid']}"
     #url = 'http://' + os.environ['CARS_SERVICE_HOST'] + ':' + os.environ['CARS_SERVICE_PORT'] + '/api/v1/cars/' + rental['carUid']
-    resp = get_data_from_service(url, headers={}, timeout=5)
+    resp = get_data_from_service(url, timeout=5)
 
     if resp is None:
         response = make_response(jsonify({'errors': ['Cars Service not working']}))
@@ -113,7 +113,7 @@ def get_rental(rentalUid):
     # получаем данные из сервиса Payment
     url = f"{payment_url}/api/v1/payment/{rental['paymentUid']}"
     #url = 'http://' + os.environ['PAYMENT_SERVICE_HOST'] + ':' + os.environ['PAYMENT_SERVICE_PORT'] + '/api/v1/payment/' + rental['paymentUid']
-    resp = get_data_from_service(url, headers={}, timeout=5)
+    resp = get_data_from_service(url, timeout=5)
 
     if resp is None:
         response = make_response(jsonify({'errors': ['Payment Service not working']}))
@@ -161,7 +161,7 @@ def get_rentals():
     for rental in rentals:
         # получаем данные из сервиса Cars
         url = f"{cars_url}/api/v1/cars/{rental['carUid']}"
-        resp = get_data_from_service(url, headers{}, timeout=5)
+        resp = get_data_from_service(url, timeout=5)
 
         if resp is None:
             response = make_response(jsonify({'errors': ['Cars Service not working']}))
@@ -175,7 +175,7 @@ def get_rentals():
 
         # получаем данные из сервиса Payment
         url = f"{payment_url}/api/v1/payment/{rental['paymentUid']}"
-        resp = get_data_from_service(url, headers={}, timeout=5)
+        resp = get_data_from_service(url, timeout=5)
 
         if resp is None:
             response = make_response(jsonify({'errors': ['Payment Service not working']}))
@@ -240,7 +240,7 @@ def post_rentals():
     
     # создание записи с помощью Cars сервиса
     url = f"{cars_url}/api/v1/cars/{body['carUid']}/order"
-    resp = post_data_to_service(url, headers={}, timeout=5, data={})
+    resp = post_data_to_service(url, timeout=5)
 
     if resp is None:
         response = make_response(jsonify({'errors': ['Payment Service not working']}))
@@ -261,11 +261,11 @@ def post_rentals():
 
     # создание записи с помощью Payment сервиса
     url = f"{payment_url}/api/v1/payment"
-    resp = post_data_to_service(url, headers={}, timeout=5, data={'price': price})
+    resp = post_data_to_service(url, timeout=5, data={'price': price})
 
     if resp is None:
         url = f"{cars_url}/api/v1/cars/{body['carUid']}/order"
-        resp = delete_data_from_service(url, headers={}, timeout=5)
+        resp = delete_data_from_service(url, timeout=5)
 
         response = make_response(jsonify({'errors': ['Payment Service not working']}))
         response.status_code = 500
@@ -278,14 +278,14 @@ def post_rentals():
 
     # создание записи с помощью Rental сервиса
     url = f"{rental_url}/api/v1/rental"
-    resp = post_data_to_service(url, headers=head, timeout=5, data={})
+    resp = post_data_to_service(url, headers=head, timeout=5, data=body)
 
     if resp is None:
         url = f"{cars_url}/api/v1/cars/{body['carUid']}/order"
-        resp = delete_data_from_service(url, headers={}, timeout=5)
+        resp = delete_data_from_service(url, timeout=5)
 
         url = f"{payment_url}/api/v1/payment/{body['paymentUid']}"
-        resp = delete_data_from_service(url, headers={}, timeout=5)
+        resp = delete_data_from_service(url, timeout=5)
 
         response = make_response(jsonify({'errors': ['Rental Service not working']}))
         response.status_code = 500
@@ -316,7 +316,7 @@ def post_rentals():
 def post_rental_finish(rentalUid):
     # создание записи с помощью Rental сервиса
     url = f"{rental_url}/api/v1/rental/{rentalUid}/finish"
-    resp = post_data_to_service(url, headers={}, timeout=5, data={})
+    resp = post_data_to_service(url, timeout=5)
 
     if resp is None:
             response = make_response(jsonify({'errors': ['Rental Service not working']}))
@@ -335,7 +335,7 @@ def post_rental_finish(rentalUid):
 
     # удаление записи с помощью Cars сервиса
     url = f"{cars_url}/api/v1/cars/{rental['carUid']}/order"
-    resp = delete_data_from_service(url, headers={}, timeout=5)
+    resp = delete_data_from_service(url, timeout=5)
 
     if resp is None:
             response = make_response(jsonify({'errors': ['Cars Service not working']}))
@@ -352,7 +352,7 @@ def post_rental_finish(rentalUid):
 def delte_rental(rentalUid):
     # удаление записи с помощью Rental сервиса
     url = f"{rental_url}/api/v1/rental/{rentalUid}"
-    resp = delete_data_from_service(url, headers={}, timeout=5)
+    resp = delete_data_from_service(url, timeout=5)
 
     if resp is None:
             response = make_response(jsonify({'errors': ['Rental Service not working']}))
@@ -371,7 +371,7 @@ def delte_rental(rentalUid):
 
     # удаление записи с помощью Cars сервиса
     url = f"{cars_url}/api/v1/cars/{rental['carUid']}/order"
-    resp = delete_data_from_service(url, headers={}, timeout=5)
+    resp = delete_data_from_service(url, timeout=5)
 
     if resp is None:
             response = make_response(jsonify({'errors': ['Cars Service not working']}))
@@ -382,7 +382,7 @@ def delte_rental(rentalUid):
 
     # удаление записи с помощью Payment сервиса
     url = f"{payment_url}/api/v1/payment/{rental['paymentUid']}"
-    resp = delete_data_from_service(url, headers={}, timeout=5)
+    resp = delete_data_from_service(url, timeout=5)
 
     if resp is None:
             response = make_response(jsonify({'errors': ['Payment Service not working']}))
